@@ -1,0 +1,12 @@
+package edu.kh.mode.vo;
+
+public class Emp2 {
+
+	private String empName;
+	private String jobName;
+	private int salary;
+	private int annualSalary;
+	
+	
+	
+}

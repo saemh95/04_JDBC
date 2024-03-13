@@ -1,0 +1,51 @@
+package edu.kh.jdbc1;
+
+
+import java.sql.*;
+import java.util.*;
+
+public class JDBCExample4 {
+
+	public static void main(String[] args) {
+		
+		
+		
+//		JOB_NAME, SALARY -> insert
+//		JOB_NAME < salary emp_name, job_name,salary, annual salary
+//		execpt -> if null "조회 결과 없음"
+//		if not null 
+//		집급명 입력 : 부사장
+//		급여 입력 : 5000000
+//		송종기 / 부사장 / 6000000 / 72000000
+		
+		//SELECT EMP_NAME, JOB_NAME, SALARY, SALARY*12 AS ANNUALSALARY FROM EMPLOYEE
+		//NATURAL JOIN JOB
+		//WHERE JOB_NAME = '부사장' AND SALARY > 4000000;
+		
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		String url = "oracle:jdbc:thin:@localhost:1521:XE";
+		String user = "kh_sh";
+		String pw = "kh1234";
+		
+		try {
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+//		Employee(empName, jobName, salary, annualSalary)
+		
+	}
+	
+}

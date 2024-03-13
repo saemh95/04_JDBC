@@ -1,0 +1,22 @@
+package edu.kh.jdbc1;
+
+import java.sql.*;
+
+public class JDBCExample1 {
+
+	public static void main(String[] args) {
+		
+//		JDBC(Java DataBase Connectivity) - Java Programming API for DB
+		
+//		1.Java - JDBC interface
+//		2.DBMS (Oracle)
+//		3.Oracle - Java library
+		
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		
+	}
+	
+}

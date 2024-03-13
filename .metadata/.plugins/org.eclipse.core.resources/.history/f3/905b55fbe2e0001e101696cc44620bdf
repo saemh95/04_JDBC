@@ -1,0 +1,44 @@
+package edu.kh.jdbc1;
+
+import java.sql.*;
+import java.util.*;
+public class JDBCExample2 {
+
+	public static void main(String[] args) {
+		
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		Scanner sc = new Scanner(System.in);
+		
+		String url = "jdbc:oracle:thin:@localhost:1521:XE";
+		
+		String user = "kh_sh";
+		String pw = "kh1234";
+		
+		try {
+			
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection(url, user, pw);
+			
+			System.out.println(conn);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+	}
+	
+}
