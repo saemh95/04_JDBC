@@ -1,6 +1,5 @@
 package edu.kh.jdbc1;
 
-import java.io.Reader;
 import java.sql.*;
 import java.util.*;
 
