@@ -1,9 +1,8 @@
-package edu.kh.jdbc.common;
+package edu.kh.emp.common;
 
-
-import java.io.*;
 import java.sql.*;
 import java.util.*;
+import java.io.*;
 public class JDBCTemplate {
 
 	private static Connection conn = null;
@@ -12,11 +11,10 @@ public class JDBCTemplate {
 		
 		try {
 			
-			if(conn == null || conn.isClosed()) {
-				
+			if (conn == null || conn.isClosed()) {
 				Properties prop = new Properties();
-				
 				FileInputStream fis = new FileInputStream("driver.xml");
+				
 				prop.loadFromXML(fis);
 				
 				String driver = prop.getProperty("driver");
@@ -30,75 +28,62 @@ public class JDBCTemplate {
 				
 				conn.setAutoCommit(false);
 				
-				
 			}
 			
-		} catch (Exception e) {
-			System.out.println("getConection error");
-			e.printStackTrace();
 			
+		} catch (Exception e) {
+			System.out.println("connection error");
+			e.printStackTrace();
 		}
+		
 		return conn;
 	}
 	
 	public static void close(Connection conn) {
 		
-		try {
+		try{
 			if (conn != null && !conn.isClosed()) conn.close();
-		} catch (Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public static void close(Statement stmt) {
 		
 		try {
-			
 			if (stmt != null && !stmt.isClosed()) stmt.close();
-			
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
 	public static void close(ResultSet rs) {
-		
 		try {
-			
-			if(rs != null && !rs.isClosed()) rs.close();
-			
-		} catch(Exception e) {
+			if (rs != null && !rs.isClosed()) rs.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
-	public static void commit(Connection conn) {
+	public static void commit() {
 		
 		try {
-			
 			if (conn != null && !conn.isClosed()) conn.commit();
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
-	public static void rollback(Connection conn) {
+	public static void rollback() {
 		
 		try {
-			
-			if (conn != null && conn.isClosed()) conn.rollback();
-			
-		} catch (Exception e) {
+			if (conn != null && !conn.isClosed()) conn.rollback();
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
-	
-	
 	
 }
+ 
