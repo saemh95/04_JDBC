@@ -1,0 +1,159 @@
+package edu.kh.jdbc.board.model;
+
+import java.sql.Connection;
+import java.util.List;
+
+import edu.kh.jdbc.board.dao.BoardDAO;
+import edu.kh.jdbc.board.dao.CommentDAO;
+import edu.kh.jdbc.board.model.dto.Board;
+import edu.kh.jdbc.board.model.dto.Comment;
+import edu.kh.jdbc.common.Session;
+
+import static edu.kh.jdbc.common.JDBCTemplate.*;
+
+public class BoardService {
+	
+	private BoardDAO dao = new BoardDAO();
+	
+	private CommentDAO commentDao = new CommentDAO();
+
+	/** 게시글 목록 조회 서비스
+	 * @return
+	 */
+	public List<Board> selectAllBoard() throws Exception{
+		
+		//커넥션 생성
+		Connection conn = getConnection();
+		
+		List<Board> board = dao.selectAllBoard(conn);
+		
+		close(conn);
+		
+		return board;
+	}
+
+	public Board selectBoard(int input, int memberNo) throws Exception{
+		
+		// 1. 커넥션 생성
+		Connection conn = getConnection();
+		
+		// 2. 게시글 상세 조회 DAO 메서드 호출
+		Board board = dao.selectBoard(conn, input, memberNo);
+		
+		// 3. 게시글이 조회된 경우 
+		if(board != null) {
+			//****************************************************
+			// ** 해당 게시글에 대한 댓글 목록 조회 DAO 호출
+			List<Comment> commentList = commentDao.selectCommentList(conn, input);
+			if(!commentList.isEmpty()) {
+				board.setCommentList(commentList);
+			}
+			//*****************************************************
+			
+			
+			
+			
+			
+			// 4. 조회수 올려주기
+			// 단, 게시글 작성자와 로그인한 회원이 다를 경우에만 증가.
+			if(board.getMemberNo() != memberNo) {
+				// 조회한 게시글 작성한 회원번호 != 로그인한 회원번호
+				
+				// 5. 조회 수 증가 DAO 메서드 호출 (UPDATE)
+				int result = dao.updateReadCount(conn, input);
+				
+				// 6. 트랜잭션 제어 처리 + 데이터 동기화 처리
+				if(result > 0) {
+					commit(conn);
+					
+					// 조회된 board의 조회수 0
+					// DB의 조회수는 1
+					// -> 조회 결과인 board의 조회수도 1증가
+					board.setReadCount(board.getReadCount() + 1);
+					
+//					System.out.println(board.getReadCount() + "1111111111111111");	
+					
+				} else {
+					rollback(conn);
+				}
+				
+				
+				
+				
+				
+				
+			}
+			
+			
+		}
+		
+		// 7. 커넥션 반환
+		close(conn);
+		
+		return board;
+	}
+
+	/**
+	 * @param boardTitle
+	 * @param string
+	 * @param boardNo
+	 * @return result
+	 */
+	public int updateBoard(String boardTitle, String boardContent, int boardNo) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		int result = dao.updateBoard(conn, boardTitle, boardContent, boardNo);
+		
+		if(result>0) commit(conn);
+		else rollback(conn);
+		close(conn);
+		
+		return result;
+	}
+
+	/** 개시글 삽입
+	 * @param boardTitle
+	 * @param string
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertBoard(String boardTitle, String boardContent, int memberNo) throws Exception{
+
+		Connection conn = getConnection();
+		
+//		다음 게시글 번호 생성 dao
+		int boardNo = dao.nextBoardNo(conn);
+		
+		int result = dao.insertBoard(conn, boardTitle, boardContent, memberNo, boardNo);
+		
+		if (result>0) {
+			commit(conn);
+			result = boardNo;
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+		
+		return result;
+	}
+
+	public int deleteBoard(int boardNo, int memberNo) throws Exception{
+
+		Connection conn = getConnection();
+		
+		int result = dao.deleteBoard(conn, boardNo, memberNo);
+		if(result>0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+		
+		return result;
+	}
+	
+	
+
+}
